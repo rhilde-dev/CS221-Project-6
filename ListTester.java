@@ -147,9 +147,12 @@ public class ListTester {
 		//empty to 1-element list
 		testSingleElementList(emptyList_addToFrontA_A, "emptyList_addToFrontA_A", LIST_A, STRING_A);
 		//1-element to empty list
+		testEmptyList(A_removeFirst_emptyList, "A_removeFirst_emptyList"); //
+		testEmptyList(A_removeLast_emptyList, "A_removeLast_emptyList"); //
 		//1-element to 2-element
 		testTwoElementList(A_addToFrontB_BA, "A_addToFrontB_BA", LIST_BA, STRING_BA);
 		//1-element to changed 1-element via set()
+		testSingleElementList(A_set_B, "A_set_B", LIST_BA, STRING_BA); //
 		//2-element to 1-element
 		//2-element to 3-element
 		//2-element to changed 2-element via set()
@@ -230,9 +233,50 @@ public class ListTester {
 	/**
 	 *  [A,B] -> set(1,C) -> [A,C]
 	 * 
+	 * =======
+	 * 
+	 * [A] -> removeFirst() -> [] -X
+	 * [A] -> removeLast() -> [] -X
+	 * [A] -> remove(A) -> [] 
+	 * [A] -> set(0,B) -> [B]
+	 * [A] -> add(1,B) -> [A,B]
+	 * [A,B] -> removeLast() -> [A]
+	 * [A,B] -> remove(A) -> [B]
+	 * [A,B] -> remove(B) -> [A]
+	 * 
 	 * (Find the other scenarios you want)
 	 * 
 	 */
+
+	/** Scenario: [A] -> removeFirst() -> [] 
+	 * @return [] after removeFirst()
+	 */
+	private IndexedUnsortedList<Integer> A_removeFirst_emptyList() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		list.removeFirst();
+		return list;
+	}
+	private Scenario<Integer> A_removeFirst_emptyList = () -> A_removeFirst_emptyList();
+
+	/** Scenario: [A] -> removeLast() -> [] 
+	 * @return [] after removeLast()
+	 */
+	private IndexedUnsortedList<Integer> A_removeLast_emptyList() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		list.removeLast();
+		return list;
+	}
+	private Scenario<Integer> A_removeLast_emptyList = () -> A_removeLast_emptyList();
+
+	/** Scenario: [A] -> set(0,B) -> [B] 
+	 * @return [B] after set(0,B)
+	 */
+	private IndexedUnsortedList<Integer> A_set_B() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		list.set(0,ELEMENT_B);
+		return list;
+	}
+	private Scenario<Integer> A_set_B = () -> A_set_B();
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
