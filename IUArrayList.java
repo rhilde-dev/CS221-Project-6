@@ -43,7 +43,14 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public void addToFront(T element) {
-		// TODO 
+		
+		rear++;
+		//shift elements
+		for (int i = 0; i < rear; i++) {
+			array[i+1] = array[i];
+		}
+		array[0] = element;
+		modCount++;
 		
 	}
 
@@ -51,36 +58,60 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 	public void addToRear(T element) {
         array[rear] = element;
 		rear++;
+		modCount++;
 	}
 
 	@Override
 	public void add(T element) {
-		// TODO 
-		
+		addToRear(element);
 	}
 
 	@Override
 	public void addAfter(T element, T target) {
-		// TODO 
+
+		if(!contains(target)){
+			throw new NoSuchElementException();
+		}
+
+		int index = indexOf(target);
+
+		rear++;
+		//shift elements
+		for (int i = index; i < rear; i++) {
+			array[i+1] = array[i];
+		}
+		array[index + 1] = element;
+
+		modCount++;
 		
 	}
 
 	@Override
 	public void add(int index, T element) {
-		// TODO 
 		
+		if(index < 0 || index > rear){
+			throw new IndexOutOfBoundsException();
+		}
+
+		rear++;
+		//shift elements
+		for (int i = index; i < rear; i++) {
+			array[i+1] = array[i];
+		}
+		array[index] = element;
+
+		modCount++;
+
 	}
 
 	@Override
 	public T removeFirst() {
-		// TODO 
-		return null;
+		return remove(0);
 	}
 
 	@Override
 	public T removeLast() {
-		// TODO 
-		return null;
+		return remove(rear-1);
 	}
 
 	@Override
@@ -124,12 +155,18 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public void set(int index, T element) {
-		// TODO 
-		
+		if (index < 0 || index >= rear){
+			throw new IndexOutOfBoundsException();
+		}
+		array[index] = element;
+		modCount++;
 	}
 
 	@Override
 	public T get(int index) {
+		if(index < 0 || index >= rear){
+			throw new IndexOutOfBoundsException();
+		}
         return array[index];
 	}
 
@@ -153,14 +190,13 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public T first() {
-		// TODO 
-		return null;
+		return array[0];
 	}
 
 	@Override
 	public T last() {
-		// TODO 
-		return null;
+		// T last = array[rear-1];
+		return array[rear-1];
 	}
 
 	@Override
@@ -170,14 +206,12 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO 
-		return false;
+		return rear > 0;
 	}
 
 	@Override
 	public int size() {
-		// TODO 
-		return 0;
+		return rear - 1;
 	}
 
 	@Override
@@ -207,7 +241,7 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 		@Override
 		public boolean hasNext() {
-            return nextIndex < rear;
+            return nextIndex < (rear-1);
 		}
 
 		@Override
@@ -215,14 +249,14 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 			if(!hasNext()){
                 throw new UnsupportedOperationException();
             }
-
             nextIndex++;
             return array[nextIndex];
 		}
 		
 		@Override
 		public void remove() {
-			// TODO
+			
+			
 			
 		}
 	}
