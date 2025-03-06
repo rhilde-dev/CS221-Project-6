@@ -670,10 +670,33 @@ public class ListTester {
 			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterRemove(iterAfterNext(scenario.build(), 2)), Result.IllegalState));
 
 			//TODO: ask how to make another call to next after remove method call
-			// printTest(scenarioName + "_iterNextRemove_testIterHasNext", testIterHasNext(iterAfterNext(iterAfterRemove(iterAfterNext(scenario.build(), 1)), 1), Result.False));
-			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterRemove(iterAfterNext(scenario.build(), 1)), null, Result.NoSuchElement));
-			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1)), Result.IllegalState));
+			printTest(scenarioName + "_iterNextRemove_testIterHasNext", testIterHasNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), Result.False));
+			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), null, Result.NoSuchElement));
+			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), Result.IllegalState));
 
+			printTest(scenarioName + "_iterNextRemove_testIterHasNext", testIterHasNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 2))), Result.False));
+			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 2))), null, Result.NoSuchElement));
+			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 2))), Result.IllegalState));
+
+			printTest(scenarioName + "_iterNextRemove_testIterHasNext", testIterHasNext(iterAfterNext(scenario.build(), 3), Result.False));
+			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterNext(scenario.build(), 3), null, Result.NoSuchElement));
+			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterNext(scenario.build(), 3), Result.IllegalState));
+			
+			printTest(scenarioName + "_iterNextRemove_testIterHasNext", testIterHasNext(iterAfterRemove(iterAfterNext(scenario.build(), 3)), Result.False));
+			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterRemove(iterAfterNext(scenario.build(), 3)), null, Result.NoSuchElement));
+			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterRemove(iterAfterNext(scenario.build(), 3)), Result.IllegalState));
+
+			/*
+			 * 
+			 * an iterator after one call to next(), a call to remove(), and finally, another call to next() //
+			   an iterator after two consecutive calls to next() //
+			   an iterator after two consecutive calls to next() immediately followed by a call to remove() //
+			   an iterator after two calls to next(), a call to remove(), and finally another call to next() //
+			   an iterator after three consecutive calls to next()
+			   an iterator after three consecutive calls to next() followed by a call to remove()
+
+			 * 
+			 */
 			
 		} catch (Exception e) {
 			System.out.printf("***UNABLE TO RUN/COMPLETE %s***\n", scenarioName + " TESTS");
