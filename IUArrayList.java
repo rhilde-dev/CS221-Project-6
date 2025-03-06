@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -40,6 +41,8 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 	private void expandCapacity() {
 		array = Arrays.copyOf(array, array.length*2);
 	}
+
+	//TODO: create expandifneccessary method
 
 	@Override
 	public void addToFront(T element) {
@@ -259,41 +262,57 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 	private class ALIterator implements Iterator<T> {
 		private int nextIndex;
 		private int iterModCount;
+		private boolean canRemove;
 		
 		public ALIterator() {
 			nextIndex = 0;
 			iterModCount = modCount;
+			canRemove = false;
 		}
 
 		@Override
 		public boolean hasNext() {
 			if (iterModCount != modCount){
-				throw new IllegalStateException();
+				throw new ConcurrentModificationException();
 			}
-            return nextIndex < (rear-1);
+            return nextIndex < rear;
 		}
 
 		@Override
 		public T next() {
-			if (iterModCount != modCount){
-				throw new IllegalStateException();
-			}
+			// if (iterModCount != modCount){
+			// 	throw new ConcurrentModificationException();
+			// }
 			if(!hasNext()){
-                throw new UnsupportedOperationException();
+                throw new NoSuchElementException();
             }
             nextIndex++;
-            return array[nextIndex];
+			canRemove = true;
+            return array[nextIndex-1];
 		}
 		
 		@Override
 		public void remove() {
 			if (iterModCount != modCount){
+				throw new ConcurrentModificationException();
+			}
+			// if (isEmpty()){
+			// 	throw new NoSuchElementException();
+			// }
+			if(!canRemove){
 				throw new IllegalStateException();
 			}
-			if (isEmpty()){
-				throw new NoSuchElementException();
+			canRemove = false;
+			for(int i = nextIndex - 1; i < rear-1; i++){
+				array[i] = array[i+1];
 			}
-			
+			array[rear-1] = null;
+			rear--;
+			modCount++;
+			iterModCount++;
+			nextIndex--;
 		}
 	}
 }
+
+//tests are up to me to decide about 14 in total
