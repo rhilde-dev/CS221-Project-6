@@ -106,11 +106,17 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public T removeFirst() {
+		if(isEmpty()){
+			throw new NoSuchElementException();
+		}
 		return remove(0);
 	}
 
 	@Override
 	public T removeLast() {
+		if(isEmpty()){
+			throw new NoSuchElementException();
+		}
 		return remove(rear-1);
 	}
 
@@ -136,8 +142,8 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public T remove(int index) {
-		if (index == NOT_FOUND) {
-			throw new NoSuchElementException();
+		if (index < 0 || index >= rear) {
+			throw new IndexOutOfBoundsException();
 		}
 		
 		T retVal = array[index];
@@ -190,12 +196,17 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public T first() {
+		if(isEmpty()){
+			throw new NoSuchElementException();
+		}
 		return array[0];
 	}
 
 	@Override
 	public T last() {
-		// T last = array[rear-1];
+		if(isEmpty()){
+			throw new NoSuchElementException();
+		}
 		return array[rear-1];
 	}
 
@@ -206,12 +217,27 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return rear > 0;
+		if(array[0] == null){
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public int size() {
-		return rear - 1;
+		return rear;
+	}
+
+	@Override
+	public String toString(){
+		String val = new String("[");
+		for (T t : array){
+			if (!(t == null)){
+				val += t + " ";
+			}
+		}
+		val += "]";
+		return val;
 	}
 
 	@Override
@@ -241,11 +267,17 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 		@Override
 		public boolean hasNext() {
+			if (iterModCount != modCount){
+				throw new IllegalStateException();
+			}
             return nextIndex < (rear-1);
 		}
 
 		@Override
 		public T next() {
+			if (iterModCount != modCount){
+				throw new IllegalStateException();
+			}
 			if(!hasNext()){
                 throw new UnsupportedOperationException();
             }
@@ -255,8 +287,12 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 		
 		@Override
 		public void remove() {
-			
-			
+			if (iterModCount != modCount){
+				throw new IllegalStateException();
+			}
+			if (isEmpty()){
+				throw new NoSuchElementException();
+			}
 			
 		}
 	}

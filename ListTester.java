@@ -20,7 +20,7 @@ public class ListTester {
 		goodList, badList, arrayList, singleLinkedList, doubleLinkedList
 	};
 	// TODO: THIS IS WHERE YOU CHOOSE WHICH LIST TO TEST
-	private final static ListToUse LIST_TO_USE = ListToUse.goodList;
+	private final static ListToUse LIST_TO_USE = ListToUse.arrayList;
 
 	// possible results expected in tests
 	private enum Result {
@@ -204,9 +204,9 @@ public class ListTester {
 		case badList:
 			listToUse = new BadList<Integer>();
 			break;
-//		case arrayList:
-//			listToUse = new IUArrayList<Integer>();
-//			break;
+		case arrayList:
+			listToUse = new IUArrayList<Integer>();
+			break;
 //		case singleLinkedList:
 //			listToUse = new IUSingleLinkedList<Integer>();
 //			break;
@@ -561,10 +561,10 @@ public class ListTester {
 			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterRemove(iterAfterNext(scenario.build(), 2)), null, Result.NoSuchElement));
 			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterRemove(iterAfterNext(scenario.build(), 2)), Result.IllegalState));
 
-			//TODO: ask how to make another call to next after remove method call
-			// printTest(scenarioName + "_iterNextRemove_testIterHasNext", testIterHasNext(iterAfterNext(iterAfterRemove(iterAfterNext(scenario.build(), 1)), 1), Result.False));
-			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterRemove(iterAfterNext(scenario.build(), 1)), null, Result.NoSuchElement));
-			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1)), Result.IllegalState));
+			//TODO: ask how to make another call to next after remove method call - MAKE HELPER METHODS LOLLLL
+			printTest(scenarioName + "_iterNextRemove_testIterHasNext", testIterHasNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), Result.False));
+			printTest(scenarioName + "_iterNextRemove_testIterNext", testIterNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), null, Result.NoSuchElement));
+			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), Result.IllegalState));
 
 			// ListIterator
 			if (SUPPORTS_LIST_ITERATOR) {
@@ -1234,6 +1234,11 @@ public class ListTester {
 			it.next();
 		}
 		return it;
+	}
+
+	private Iterator<Integer> iterAfterNextRemove(Iterator<Integer> itr){
+		itr.next();
+		return itr;
 	}
 
 	/** Helper for testing iterators. Return an Iterator that has had remove() called once.
