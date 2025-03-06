@@ -20,7 +20,7 @@ public class ListTester {
 		goodList, badList, arrayList, singleLinkedList, doubleLinkedList
 	};
 	// TODO: THIS IS WHERE YOU CHOOSE WHICH LIST TO TEST
-	private final static ListToUse LIST_TO_USE = ListToUse.arrayList;
+	private final static ListToUse LIST_TO_USE = ListToUse.singleLinkedList;
 
 	// possible results expected in tests
 	private enum Result {
@@ -207,9 +207,9 @@ public class ListTester {
 		case arrayList:
 			listToUse = new IUArrayList<Integer>();
 			break;
-//		case singleLinkedList:
-//			listToUse = new IUSingleLinkedList<Integer>();
-//			break;
+		case singleLinkedList:
+			listToUse = new IUSingleLinkedList<Integer>();
+			break;
 //		case doubleLinkedList:
 //			listToUse = new IUDoubleLinkedList<Integer>();
 //			break;
@@ -540,7 +540,7 @@ public class ListTester {
 			printTest(scenarioName + "_testRemove0", testRemoveIndex(scenario.build(), 0, contents[1], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove1", testRemoveIndex(scenario.build(), 1, contents[1], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove2", testRemoveIndex(scenario.build(), 2, contents[1], Result.IndexOutOfBounds));
-			// Iterator
+			// Iterator 
 			printTest(scenarioName + "_testIter", testIter(scenario.build(), Result.NoException));
 			printTest(scenarioName + "_testIterHasNext", testIterHasNext(scenario.build().iterator(), Result.True));
 			printTest(scenarioName + "_testIterNext", testIterNext(scenario.build().iterator(), contents[0], Result.MatchingValue));
