@@ -52,13 +52,13 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 	@Override
 	public void addToFront(T element) {
 		expandIfNecessary();
-		rear++;
 		//shift elements
-		for (int i = 0; i < rear; i++) {
-			array[i+1] = array[i];
+		for (int i = rear; i > 0; i--) {
+			array[i] = array[i-1];
 		}
+		rear++;
 		array[0] = element;
-		array[rear] = null;
+		// array[rear] = null;
 		modCount++;
 		
 	}
