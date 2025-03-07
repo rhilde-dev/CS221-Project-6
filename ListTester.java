@@ -168,15 +168,15 @@ public class ListTester {
 		//1-element to 2-element
 		testTwoElementList(A_addToFrontB_BA, "A_addToFrontB_BA", LIST_BA, STRING_BA);
 		testTwoElementList(A_add_AB, "A_add_AB", LIST_AB, STRING_AB);
-		testTwoElementList(AB_iterRemoveAfterNextA_B, "AB_iterRemoveAfterNextA_B", LIST_B, STRING_B);
-
+		
 		//1-element to changed 1-element via set()
 		testSingleElementList(A_set_B, "A_set_B", LIST_B, STRING_B); 
-
+		
 		//2-element to 1-element
 		testSingleElementList(AB_removeA_B, "AB_removeA_B", LIST_B, STRING_B);
 		testSingleElementList(AB_removeB_A, "AB_removeB_A", LIST_A, STRING_A);
 		testSingleElementList(AB_remove1_A, "AB_remove1_A", LIST_A, STRING_A);
+		testSingleElementList(AB_iterRemoveAfterNextA_B, "AB_iterRemoveAfterNextA_B", LIST_B, STRING_B);
 
 		//2-element to 3-element
 		testThreeElementList(AB_addToFrontC_CAB, "AB_addToFrontC_CAB", LIST_CAB, STRING_CAB);
@@ -659,7 +659,7 @@ public class ListTester {
 			// IndexedUnsortedList
 			printTest(scenarioName + "_testRemoveFirst", testRemoveFirst(scenario.build(), contents[0], Result.MatchingValue));
 			printTest(scenarioName + "_testRemoveLast", testRemoveLast(scenario.build(), contents[2], Result.MatchingValue));
-			printTest(scenarioName + "_testRemoveNeg1" + contentsString.charAt(-1), testRemoveElement(scenario.build(), contents[-1], Result.IndexOutOfBounds));
+			// printTest(scenarioName + "_testRemoveNeg1" + contentsString.charAt(-1), testRemoveElement(scenario.build(), contents[-1], Result.IndexOutOfBounds));
 			printTest(scenarioName + "_testRemove0Element" + contentsString.charAt(0), testRemoveElement(scenario.build(), contents[0], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove1Element" + contentsString.charAt(1), testRemoveElement(scenario.build(), contents[1], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove2Element" + contentsString.charAt(2), testRemoveElement(scenario.build(), contents[2], Result.MatchingValue));

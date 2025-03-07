@@ -42,23 +42,30 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 		array = Arrays.copyOf(array, array.length*2);
 	}
 
-	//TODO: create expandifneccessary method
+	public void expandIfNecessary(){
+		if (rear == size()){
+			expandCapacity();
+		}
+	}
 
+	//TODO: Redo add to front so that rear gets set in the right spot and
 	@Override
 	public void addToFront(T element) {
-		
+		expandIfNecessary();
 		rear++;
 		//shift elements
 		for (int i = 0; i < rear; i++) {
 			array[i+1] = array[i];
 		}
 		array[0] = element;
+		array[rear] = null;
 		modCount++;
 		
 	}
 
 	@Override
 	public void addToRear(T element) {
+		expandIfNecessary();
         array[rear] = element;
 		rear++;
 		modCount++;
@@ -66,12 +73,13 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public void add(T element) {
+		expandIfNecessary();
 		addToRear(element);
 	}
 
 	@Override
 	public void addAfter(T element, T target) {
-
+		expandIfNecessary();
 		if(!contains(target)){
 			throw new NoSuchElementException();
 		}
@@ -91,7 +99,7 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 
 	@Override
 	public void add(int index, T element) {
-		
+		expandIfNecessary();
 		if(index < 0 || index > rear){
 			throw new IndexOutOfBoundsException();
 		}
@@ -314,5 +322,3 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
 		}
 	}
 }
-
-//tests are up to me to decide about 14 in total
