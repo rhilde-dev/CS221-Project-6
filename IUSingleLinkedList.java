@@ -1,5 +1,6 @@
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     private Node<T> head;
@@ -14,20 +15,30 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public void addToFront(T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addToFront'");
+        Node<T> newNode = new Node<T>(element);
+        if (size == 0){
+            tail = newNode;
+        }
+        newNode.setNextNode(head);
+        head = newNode;
+        size++;
     }
 
     @Override
     public void addToRear(T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addToRear'");
+        Node<T> newNode = new Node<T>(element);
+        if (size > 0){
+            tail.setNextNode(newNode);
+        } else {
+            head = newNode;
+        }
+        tail = newNode;
+        size++;
     }
 
     @Override
     public void add(T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        addToRear(element);
     }
 
     @Override
@@ -74,44 +85,76 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T get(int index) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        if (index < 0 || index >= size){
+            throw new IndexOutOfBoundsException();
+        }
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++){
+            currentNode = currentNode.getNextNode();
+        }
+        return currentNode.getElement();
     }
 
     @Override
     public int indexOf(T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'indexOf'");
+        Node<T> currentNode = head;
+        int currentIndex = 0;
+        int returnIndex = -1;
+        while(currentNode != null && returnIndex < 0){
+            if (currentNode.getElement().equals(element)){
+                returnIndex = currentIndex;
+            } else {
+                currentIndex++;
+                currentNode = currentNode.getNextNode();
+            }
+        } 
+        return returnIndex;
     }
 
     @Override
     public T first() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'first'");
+        if (isEmpty()){
+            throw new NoSuchElementException();
+        }
+        return head.getElement();
     }
 
     @Override
     public T last() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'last'");
+        if (isEmpty()){
+            throw new NoSuchElementException();
+        }
+        return tail.getElement();
     }
 
     @Override
     public boolean contains(T target) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contains'");
+        return indexOf(target) > -1;
     }
 
     @Override
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
+        return size == 0;
     }
 
     @Override
     public int size() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'size'");
+        return size;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+		str.append("[");
+		for(T element : this){
+			str.append(element.toString());
+			str.append(",");
+		}
+		if (size() > 0){
+			str.delete(str.length() - 2, str.length());
+		}
+		str.append("]");
+		return str.toString();
     }
 
     @Override

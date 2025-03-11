@@ -1,4 +1,3 @@
-
 /**
  * A node for building linked data structures.
  * @author rhilde-dev
