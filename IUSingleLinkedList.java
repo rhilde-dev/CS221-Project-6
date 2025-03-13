@@ -209,9 +209,12 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         private Node<T> nextNode;
         private int iterModCount;
 
+        /**
+         * initalize Iterator in front of first element
+         */
         public SLLIterator(){
             nextNode = head;
-            iterModCount = 0;
+            iterModCount = modCount;
         }
 
         @Override
