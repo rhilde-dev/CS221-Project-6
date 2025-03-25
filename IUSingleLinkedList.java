@@ -7,7 +7,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
-    private int modCount = 0;
+    private int modCount = 0;   
 
     /** Initialize brand new empty list. */
     public IUSingleLinkedList(){
@@ -208,6 +208,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     private class SLLIterator implements Iterator<T> {
         private Node<T> nextNode;
         private int iterModCount;
+        private boolean canRemove = false; //maybe remove false
 
         /**
          * initalize Iterator in front of first element
@@ -232,17 +233,44 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
             }
             T retVal = nextNode.getElement();
             nextNode = nextNode.getNextNode();
+            canRemove = true;
             return retVal;
         }
 
-        // @Override
-        // public T remove(){
-        //     //TODO implement remove()
-        //     throw new UnsupportedOperationException();
-        // }
-            
+        @Override
+        public void remove(){
+            if (modCount != iterModCount){
+                throw new ConcurrentModificationException();
+            }
+            if (!canRemove){
+                throw new IllegalStateException();
+            }
+            canRemove = false;
 
-        
+            if(head.getNextNode() == nextNode){ //removing head
+                //if head == tail
+                    //head = tail = null
+                
+                head = nextNode; // or head = head.getNextNode();
+                if (head == null){ //or size == 1
+                    tail = null;
+                }
+            } else {
+                //general case
+                Node<T> prevPrevNode = head;
+                while (prevPrevNode.getNextNode().getNextNode() != nextNode){
+                    prevPrevNode = prevPrevNode.getNextNode();
+                }
+                //if pp.getnext().getnext() == null -> update tail
+                prevPrevNode.setNextNode(nextNode);
+                if(nextNode == null){ //remove tail
+                    tail = prevPrevNode;
+                }
+            }
+            size--;
+            iterModCount++;
+            modCount++;
+        }
     }
 
 }
