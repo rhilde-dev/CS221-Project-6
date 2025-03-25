@@ -121,6 +121,21 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     }
 
     @Override
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+		str.append("[");
+		for(T element : this){
+			str.append(element.toString());
+			str.append(",");
+		}
+		if (size() > 0){
+			str.delete(str.length() - 2, str.length());
+		}
+		str.append("]");
+		return str.toString();
+    }
+
+    @Override
     public Iterator<T> iterator() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'iterator'");
