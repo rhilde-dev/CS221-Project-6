@@ -5,6 +5,7 @@
 public class Node<T> {
     private T element;
     private Node<T> nextNode;
+    private Node<T> previousNode;
 
     public Node(T element){
         this.element = element;
@@ -30,6 +31,14 @@ public class Node<T> {
 
     public void setNextNode(Node<T> nextNode) {
         this.nextNode = nextNode;
+    }
+
+    public Node<T> getPreviousNode() {
+        return previousNode;
+    }
+
+    public void setPreviousNode(Node<T> previousNode) {
+        this.previousNode = previousNode;
     }
 
     
