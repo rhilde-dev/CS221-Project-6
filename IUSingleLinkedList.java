@@ -111,6 +111,10 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         for (int i = 0; i < index; i++){
             currentNode = currentNode.getNextNode();
         }
+        // for (int i = index; i < tail; i++){
+
+
+        // }
         
     }
 
