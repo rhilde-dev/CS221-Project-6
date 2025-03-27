@@ -101,14 +101,32 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T remove(int index) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+        if(isEmpty()){
+            throw new NoSuchElementException();
+        }
+        if (index < 0 || index >= size){
+            throw new IndexOutOfBoundsException();
+        }
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++){
+            currentNode = currentNode.getNextNode();
+        }
+        
     }
 
     @Override
     public void set(int index, T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'set'");
+        if(isEmpty()){
+            throw new NoSuchElementException();
+        }
+        if (index < 0 || index >= size){
+            throw new IndexOutOfBoundsException();
+        }
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++){
+            currentNode = currentNode.getNextNode();
+        }
+        currentNode.setElement(element);
     }
 
     @Override
