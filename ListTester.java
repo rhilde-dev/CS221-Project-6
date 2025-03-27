@@ -143,6 +143,12 @@ public class ListTester {
 		String STRING_B = "B";
 		Integer[] LIST_AB = {ELEMENT_A, ELEMENT_B};
 		String STRING_AB = "AB";
+		Integer[] LIST_AC = {ELEMENT_A, ELEMENT_C};
+		String STRING_AC = "AC";
+		Integer[] LIST_BC = {ELEMENT_B, ELEMENT_C};
+		String STRING_BC = "BC";
+		Integer[] LIST_CB = {ELEMENT_C, ELEMENT_B};
+		String STRING_CB = "CB";
 		Integer[] LIST_BA = {ELEMENT_B, ELEMENT_A};
 		String STRING_BA = "BA";
 		Integer[] LIST_CAB = {ELEMENT_C,ELEMENT_A,ELEMENT_B};
@@ -183,8 +189,16 @@ public class ListTester {
 		testThreeElementList(AB_addAfterCB_ABC, "AB_addAfterCB_ABC", LIST_ABC, STRING_ABC);
 
 		//2-element to changed 2-element via set()
+		testTwoElementList(AB_set0C_CB, "AB_set0C_CB", LIST_CB, STRING_CB);
+		testTwoElementList(AB_set1C_AC, "AB_set1C_AC", LIST_AC, STRING_AC);
+
 		//3-element to 2-element
 		testTwoElementList(ABC_removeC_AB, "ABC_removeC_AB", LIST_AB, STRING_AB);
+		testTwoElementList(ABC_iterRemoveAfterNext_BC, "ABC_iterRemoveAfterNext_BC", LIST_BC, STRING_BC);
+		testTwoElementList(ABC_iterRemoveAfterNext_AC, "ABC_iterRemoveAfterNext_AC", LIST_AC, STRING_AC);
+		testTwoElementList(ABC_remove0_BC, "ABC_remove0_BC", LIST_BC, STRING_BC);
+		testTwoElementList(ABC_remove1_AC, "ABC_remove1_AC", LIST_AC, STRING_AC);
+		testTwoElementList(ABC_remove2_AB, "ABC_remove2_AB" , LIST_AB, STRING_AB);
 
 		//3-element to changed 3-element via set()
 		testThreeElementList(ABC_set1D_ADC, "ABC_set1D_ADC", LIST_ADC, STRING_ADC);
@@ -415,6 +429,98 @@ public class ListTester {
 	
 
 	//======================= ArrayList ===========================
+
+	//======================= SLL ===========================
+
+	/*
+	31) [A,B] -> set(0,C) -> [C,B]
+	32) [A,B] -> set(1,C) -> [A,C]
+	47) [A,B,C] -> iterator remove() after next() returns A -> [B,C]
+	48) [A,B,C] -> iterator remove() after next() returns B -> [A,C]
+	39) [A,B,C] -> remove(1) -> [A,C]
+	40) [A,B,C] -> remove(2) -> [A,B]
+	38) [A,B,C] -> remove(0) -> [B,C]
+	 * 
+	 */
+
+	/** Scenario: [A,B] -> set0C -> [C,B] 
+	 * @return [C,B] after set0C
+	 */
+	private IndexedUnsortedList<Integer> AB_set0C_CB() {
+		IndexedUnsortedList<Integer> list = A_add_AB(); 
+		list.set(0,ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_set0C_CB = () -> AB_set0C_CB();
+
+	/** Scenario: [A,B] -> set1C -> [A,C] 
+	 * @return [A,C] after set1C
+	 */
+	private IndexedUnsortedList<Integer> AB_set1C_AC() {
+		IndexedUnsortedList<Integer> list = A_add_AB(); 
+		list.set(1,ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_set1C_AC = () -> AB_set1C_AC();
+
+	/** Scenario: [A,B,C] -> iteratorRemoveAfterNextA -> [B,C] 
+	 * @return [B,C] after iteratorRemoveAfterNextA
+	 */
+	private IndexedUnsortedList<Integer> ABC_iterRemoveAfterNext_BC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC(); 
+		Iterator<Integer> it = list.iterator();
+		it.next();
+		it.remove();
+		return list;
+	}
+	private Scenario<Integer> ABC_iterRemoveAfterNext_BC = () -> ABC_iterRemoveAfterNext_BC();
+
+	/** Scenario: [A,B,C] -> iteratorRemoveAfterNextC -> [A,B] 
+	 * @return [A,B] after iteratorRemoveAfterNextC
+	 */
+	private IndexedUnsortedList<Integer> ABC_iterRemoveAfterNext_AC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC(); 
+		Iterator<Integer> it = list.iterator();
+		it.next();
+		it.next();
+		it.remove();
+		return list;
+	}
+	private Scenario<Integer> ABC_iterRemoveAfterNext_AC = () -> ABC_iterRemoveAfterNext_AC();
+	
+	/** Scenario: [A,B,C] -> remove0 -> [B,C] 
+	 * @return [B,C] after remove0
+	 */
+	private IndexedUnsortedList<Integer> ABC_remove0_BC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC(); 
+		list.remove(0);
+		return list;
+	}
+	private Scenario<Integer> ABC_remove0_BC = () -> ABC_remove0_BC();
+	
+	/** Scenario: [A,B,C] -> remove1 -> [A,C] 
+	 * @return [A,C] after remove1
+	 */
+	private IndexedUnsortedList<Integer> ABC_remove1_AC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC(); 
+		list.remove(1);
+		return list;
+	}
+	private Scenario<Integer> ABC_remove1_AC = () -> ABC_remove1_AC();
+
+	/** Scenario: [A,B,C] -> remove2 -> [A,B] 
+	 * @return [A,B] after remove2
+	 */
+	private IndexedUnsortedList<Integer> ABC_remove2_AB() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC(); 
+		list.remove(2);
+		return list;
+	}
+	private Scenario<Integer> ABC_remove2_AB = () -> ABC_remove2_AB();
+
+
+
+	//======================= SLL ===========================
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
