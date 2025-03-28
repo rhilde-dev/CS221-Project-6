@@ -66,7 +66,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
             currentNode = currentNode.getNextNode();
         }
 
-        //TODO: find a way to shift the data forward without losing it
+        
 
 
         size++;
@@ -123,24 +123,29 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
             retVal = currentNode.getElement();
             head = tail = null;
         } else {
-            while(!currentNode.getElement().equals(element)){
-                if (nextNode == null){
+
+            //handle if it is found as the first value in the list
+
+            //general case
+            while(!nextNode.getElement().equals(element)){
+                //end of list 
+                if (nextNode.getNextNode() == null){
                     throw new NoSuchElementException();
                 }
                 currentNode = nextNode;
             }
-    
-            //store retVal
-            retVal = currentNode.getElement();
+            retVal = nextNode.getElement();
+
+            currentNode.setNextNode(nextNode.getNextNode());
+            tail = currentNode;
     
             //shift operation 
-            while(nextNode != tail){
-                currentNode.setElement(nextNode.getElement());
-                currentNode = nextNode;
-            }
+            // while(nextNode != tail){
+            //     currentNode.setElement(nextNode.getElement());
+            //     currentNode = nextNode;
+            // }
             
-            currentNode.setElement(nextNode.getElement());
-            tail = currentNode;
+            // currentNode.setElement(nextNode.getElement());
             // currentNode.setNextNode(null);
         }
         //find the first element that matches
