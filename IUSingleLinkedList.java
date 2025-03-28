@@ -53,8 +53,24 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public void add(int index, T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        if (index < 0 || index > size){
+            throw new IndexOutOfBoundsException();
+        }
+        
+        Node<T> currentNode = head;
+        Node<T> nextNode = currentNode.getNextNode();
+
+
+
+        for (int i = 0; i < index; i++){
+            currentNode = currentNode.getNextNode();
+        }
+
+        //TODO: find a way to shift the data forward without losing it
+
+
+        size++;
+        modCount++;
     }
 
     @Override
@@ -95,46 +111,57 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T remove(T element) {
-        Node<T> matchNode = new Node<T>(element);
+        // Node<T> matchNode = new Node<T>(element);
         if(isEmpty()){
             throw new NoSuchElementException();
         }
         T retVal = null;
         Node<T> currentNode = head;
         Node<T> nextNode = currentNode.getNextNode();
+
+        if(size == 1){
+            retVal = currentNode.getElement();
+            head = tail = null;
+        } else {
+            while(!currentNode.getElement().equals(element)){
+                if (nextNode == null){
+                    throw new NoSuchElementException();
+                }
+                currentNode = nextNode;
+            }
+    
+            //store retVal
+            retVal = currentNode.getElement();
+    
+            //shift operation 
+            while(nextNode != tail){
+                currentNode.setElement(nextNode.getElement());
+                currentNode = nextNode;
+            }
+            
+            currentNode.setElement(nextNode.getElement());
+            tail = currentNode;
+            // currentNode.setNextNode(null);
+        }
         //find the first element that matches
-
-        while(nextNode != matchNode){
-            currentNode = nextNode;
-        }
-
-        //store retVal
-        retVal = nextNode.getElement();
-        
-        nextNode = currentNode.getNextNode().getNextNode();
-
-        while(nextNode != tail){
-            // currentNode
-        }
-        //shift operation
         
         size--;
         modCount++;
         return retVal;
 
+        // throw new UnsupportedOperationException("Unimplemented method 'remove'");
+
     }
 
     @Override
     public T remove(int index) {
-        if(isEmpty()){
-            throw new NoSuchElementException();
-        }
         if (index < 0 || index >= size){
             throw new IndexOutOfBoundsException();
         }
         T retVal = null;
         Node<T> currentNode = head;
         if(size == 1){
+            retVal = currentNode.getElement();
             head = tail = null;
         } else {
             //general case
@@ -148,10 +175,11 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     
             for (int i = index; i < size; i++){
                 if (nextNode == tail){
+                    currentNode.setElement(nextNode.getElement());
                     tail = currentNode;
                     currentNode.setNextNode(null);
                 }
-                currentNode = nextNode;
+                currentNode.setElement(nextNode.getElement());
             }
         }
 
