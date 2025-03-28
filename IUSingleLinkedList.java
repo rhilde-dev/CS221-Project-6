@@ -53,6 +53,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public void add(int index, T element) {
+        Node<T> newNode = new Node<T>(element);
         if (index < 0 || index > size){
             throw new IndexOutOfBoundsException();
         }
@@ -60,12 +61,23 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         Node<T> currentNode = head;
         Node<T> nextNode = currentNode.getNextNode();
 
+        //edge cases
+        if(size == 1){
+            tail = null;
+            currentNode.getNextNode().setNextNode(newNode);
+            tail = newNode;
 
+        } else { //general case
+            //find index node
+            for (int i = 0; i < index; i++){
+                // if (){
 
-        for (int i = 0; i < index; i++){
-            currentNode = currentNode.getNextNode();
+                // }
+                currentNode = currentNode.getNextNode();
+            }
+            newNode.setNextNode(nextNode);
+            currentNode.setNextNode(newNode);
         }
-
         
 
 
@@ -178,14 +190,16 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     
             Node<T> nextNode = currentNode.getNextNode();
     
-            for (int i = index; i < size; i++){
-                if (nextNode == tail){
-                    currentNode.setElement(nextNode.getElement());
-                    tail = currentNode;
-                    currentNode.setNextNode(null);
-                }
-                currentNode.setElement(nextNode.getElement());
-            }
+            // for (int i = index; i < size; i++){
+            //     if (nextNode == tail){
+            //         currentNode.setElement(nextNode.getElement());
+            //         tail = currentNode;
+            //         currentNode.setNextNode(null);
+            //     }
+            //     currentNode.setElement(nextNode.getElement());
+            // }
+            //TODO: fix this ^^^ make connections, no shift operations should occur. Reference remove(element)
+
         }
 
         size--;
