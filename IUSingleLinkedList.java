@@ -95,8 +95,33 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T remove(T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+        Node<T> matchNode = new Node<T>(element);
+        if(isEmpty()){
+            throw new NoSuchElementException();
+        }
+        T retVal = null;
+        Node<T> currentNode = head;
+        Node<T> nextNode = currentNode.getNextNode();
+        //find the first element that matches
+
+        while(nextNode != matchNode){
+            currentNode = nextNode;
+        }
+
+        //store retVal
+        retVal = nextNode.getElement();
+        
+        nextNode = currentNode.getNextNode().getNextNode();
+
+        while(nextNode != tail){
+            // currentNode
+        }
+        //shift operation
+        
+        size--;
+        modCount++;
+        return retVal;
+
     }
 
     @Override
@@ -107,15 +132,35 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         if (index < 0 || index >= size){
             throw new IndexOutOfBoundsException();
         }
+        T retVal = null;
         Node<T> currentNode = head;
-        for (int i = 0; i < index; i++){
-            currentNode = currentNode.getNextNode();
+        if(size == 1){
+            head = tail = null;
+        } else {
+            //general case
+            for (int i = 0; i < index; i++){
+                currentNode = currentNode.getNextNode();
+            }
+            retVal = currentNode.getElement();
+            //shift operation
+    
+            Node<T> nextNode = currentNode.getNextNode();
+    
+            for (int i = index; i < size; i++){
+                if (nextNode == tail){
+                    tail = currentNode;
+                    currentNode.setNextNode(null);
+                }
+                currentNode = nextNode;
+            }
         }
-        // for (int i = index; i < tail; i++){
 
+        size--;
+        modCount++;
 
-        // }
+        return retVal;
         
+        // throw new UnsupportedOperationException("Unimplemented method 'remove'");
     }
 
     @Override
