@@ -181,7 +181,7 @@ public interface IndexedUnsortedList<T> extends Iterable<T>
      * the iterator positioned before the specified index. 
      *
      * @return a ListIterator over the elements in this list
-     *
+     * @throws IndexOutOfBoundsException if index < 0 || index > size
      * @throws UnsupportedOperationException if not implemented
      */
     public ListIterator<T> listIterator(int startingIndex);
