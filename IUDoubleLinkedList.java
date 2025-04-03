@@ -64,46 +64,28 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         } else {
             targetNode.getNextNode().setPreviousNode(newNode);
         }
-
-
-        // if (size == 0){
-        //     throw new NoSuchElementException();
-        // }
-        // //set next node to the current node
-        // Node<T> newNode = new Node<T>(element);
-        // Node<T> currentNode = head;
-        // while(!currentNode.getElement().equals(target)){
-        //     if(currentNode.getNextNode() == null){
-        //         throw new NoSuchElementException();
-        //     }
-        //     currentNode = currentNode.getNextNode();
-        // }
-        // if (currentNode == tail){
-        //     tail.setNextNode(newNode);
-        //     newNode.setPreviousNode(tail);
-        //     tail = newNode;
-        // } else {
-        //     newNode.setNextNode(currentNode.getNextNode());
-        //     newNode.setPreviousNode(currentNode);
-        //     currentNode.getNextNode().setPreviousNode(newNode);
-        //     currentNode.setNextNode(newNode);
-        // }
-
+        
         size++;
         modCount++;
+
 
     }
 
     @Override
     public void add(int index, T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        ListIterator<T> lit = listIterator(index);
+        lit.add(element);
     }
 
     @Override
     public T removeFirst() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeFirst'");
+        if (isEmpty()){
+            throw new NoSuchElementException();
+        }
+        ListIterator<T> lit = listIterator();
+        T retVal = lit.next();
+        lit.remove();
+        return retVal;
     }
 
     @Override
@@ -132,8 +114,13 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T remove(int index) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+        if (index < 0 || index >= size){ // valid remove index range != list iterator's range
+            throw new IndexOutOfBoundsException();
+        }
+        ListIterator<T> lit = listIterator(index);
+        T retVal = lit.next();
+        lit.remove();
+        return retVal;
     }
 
     @Override
@@ -264,7 +251,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
                 throw new IndexOutOfBoundsException();
             }
             nextNode = head;
-            for (int i = 0; i < startingIndex; i++){
+            for (int i = 0; i < startingIndex; i++){ //it's fine in the first half, but you should figure out how to start from the back if it's in the second half
                 nextNode = nextNode.getNextNode();
             }
             nextIndex = startingIndex;
@@ -272,9 +259,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             lastReturnedNode = null;
 
         }
-
-
-
 
         @Override
         public boolean hasNext() {
@@ -334,6 +318,33 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         @Override
         public void remove() {
             //enum, pair of booleans, check for last removed values
+            if (iterModCount != modCount){ //is the iterator still valid
+                throw new ConcurrentModificationException();
+            }
+            if (lastReturnedNode == null){ //am I allowed to remove
+                throw new IllegalStateException();
+            }
+            if (lastReturnedNode == head) {
+                head = head.getNextNode();
+            } else {
+                lastReturnedNode.getPreviousNode().setNextNode(lastReturnedNode.getNextNode());
+            }
+            if (lastReturnedNode == tail) {
+                tail = tail.getPreviousNode();
+            } else {
+                lastReturnedNode.getNextNode().setPreviousNode(lastReturnedNode.getPreviousNode());
+            }
+            if (nextNode == lastReturnedNode){ //last move was previous
+                nextNode = nextNode.getNextNode();
+            } else { //last move was next
+                nextIndex--;
+            }
+
+            lastReturnedNode = null;
+            size--;
+            modCount++;
+            iterModCount++;
+
         }
 
         @Override
