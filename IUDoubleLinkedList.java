@@ -24,11 +24,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     public void addToFront(T element) { //TODO: check this ------
         Node<T> newNode = new Node<T>(element);
         if (size == 0) {
+            head = tail = newNode;
+        } else {
+            newNode.setNextNode(head);
+            newNode.getNextNode().setPreviousNode(newNode);
             head = newNode;
         }
-        newNode.setNextNode(head);
-        newNode.getNextNode().setPreviousNode(newNode);
-        head = newNode;
         size++;
         modCount++;
     }
@@ -390,9 +391,14 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         }
 
         @Override
-        public void set(T e) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'set'");
+        public void set(T e) { //TODO: check this -----
+            if (iterModCount != modCount){ //is the iterator still valid
+                throw new ConcurrentModificationException();
+            }
+            if (lastReturnedNode == null){
+                throw new IllegalStateException();
+            }
+            lastReturnedNode.setElement(e);
         }
 
         @Override
@@ -429,7 +435,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
                 }
             }
 
+            // newNode.setNextNode(lastReturnedNode.getNextNode());
+            // lastReturnedNode.getNextNode().setPreviousNode(newNode);
+            // newNode.setPreviousNode(lastReturnedNode);
+            // lastReturnedNode.setNextNode(newNode);
 
+            // lastReturnedNode = null;
             size++;
             iterModCount++;
             modCount++;
