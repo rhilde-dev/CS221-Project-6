@@ -27,7 +27,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             head = tail = newNode;
         } else {
             newNode.setNextNode(head);
-            newNode.getNextNode().setPreviousNode(newNode);
+            head.setPreviousNode(newNode);
             head = newNode;
         }
         size++;
@@ -246,7 +246,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 			str.append(",");
 		}
 		if (size() > 0){
-			str.delete(str.length() - 2, str.length());
+			str.delete(str.length() - 1, str.length());
 		}
 		str.append("]");
 		return str.toString();
