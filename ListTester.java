@@ -527,6 +527,37 @@ public class ListTester {
 	/*
 	 * Implement change scenarios resulting from modifications to the list 
 	 * from ListIterator's add(), remove(), and set() methods. 
+	 * 
+	 * including ListIterator with remove(), add(), and set() methods:
+50-55) same as Iterator remove() after next() scenarios above
+56) [A] -> iterator remove() after previous() returns A -> [] --
+57) [A,B] -> iterator remove() after previous() returns A -> [B]
+58) [A,B] -> iterator remove() after previous() returns B -> [A] --
+59) [A,B,C] -> iterator remove() after previous() returns A -> [B,C]
+60) [A,B,C] -> iterator remove() after previous() returns B -> [A,C]
+61) [A,B,C] -> iterator remove() after previous() returns C -> [A,B]
+62) [] -> iterator add(A) -> [A] --
+63) [A] -> iterator add(B) with new iterator -> [B,A] --
+64) [A] -> iterator add(B) after next() returns A -> [A,B]
+65) [A] -> iterator add(B) after previous() returns A -> [B,A]
+66) [A,B] -> iterator add(C) with new iterator -> [C,A,B]
+67) [A,B] -> iterator add(C) after next() returns A -> [A,C,B]
+68) [A,B] -> iterator add(C) after next() returns B -> [A,B,C]
+69) [A,B] -> iterator add(C) after previous() returns A -> [C,A,B]
+70) [A,B] -> iterator add(C) after previous() returns B -> [A,C,B]
+71) [A] -> iterator set(B) after next() returns A -> [B] --
+72) [A] -> iterator set(B) after previous() returns A -> [B]
+73) [A,B] -> iterator set(C) after next() returns A -> [C,B]
+74) [A,B] -> iterator set(C) after next() returns B -> [A,C]
+75) [A,B] -> iterator set(C) after previous() returns A -> [C,B]
+76) [A,B] -> iterator set(C) after previous() returns B -> [A,C]
+77) [A,B,C] -> iterator set(D) after next() returns A -> [D,B,C]
+78) [A,B,C] -> iterator set(D) after next() returns B -> [A,D,C]
+79) [A,B,C] -> iterator set(D) after next() returns C -> [A,B,D]
+80) [A,B,C] -> iterator set(D) after previous() returns A -> [D,B,C]
+81) [A,B,C] -> iterator set(D) after previous() returns B -> [A,D,C]
+82) [A,B,C] -> iterator set(D) after previous() returns C -> [A,B,D]
+	 * 
 	 */
 
 	//======================= DLL ===========================
@@ -662,11 +693,13 @@ public class ListTester {
 			printTest(scenarioName + "_iterNextRemove_testIterRemove", testIterRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1)), Result.IllegalState));
 			// ListIterator
 			if (SUPPORTS_LIST_ITERATOR) {
+				//calling at different locations
 				printTest(scenarioName + "_testListIter", testListIter(scenario.build(), Result.NoException));
 				printTest(scenarioName + "_testListIterNeg1", testListIter(scenario.build(), -1, Result.IndexOutOfBounds));
 				printTest(scenarioName + "_testListIter0", testListIter(scenario.build(), 0, Result.NoException));
 				printTest(scenarioName + "_testListIter1", testListIter(scenario.build(), 1, Result.NoException));
 				printTest(scenarioName + "_testListIter2", testListIter(scenario.build(), 2, Result.IndexOutOfBounds));
+				//calling all methods at first location
 				printTest(scenarioName + "_testListIterHasNext", testIterHasNext(scenario.build().listIterator(), Result.True));
 				printTest(scenarioName + "_testListIterNext", testIterNext(scenario.build().listIterator(), contents[0], Result.MatchingValue));
 				printTest(scenarioName + "_testListIterNextIndex", testListIterNextIndex(scenario.build().listIterator(), 0, Result.MatchingValue));
@@ -676,10 +709,12 @@ public class ListTester {
 				printTest(scenarioName + "_testListIterRemove", testIterRemove(scenario.build().listIterator(), Result.IllegalState));
 				printTest(scenarioName + "_testListIterAdd", testListIterAdd(scenario.build().listIterator(), ELEMENT_X, Result.NoException));			
 				printTest(scenarioName + "_testListIterSet", testListIterSet(scenario.build().listIterator(), ELEMENT_X, Result.IllegalState));
+				//call methods with one call to next
 				printTest(scenarioName + "_testListIterNextRemove", testIterRemove(listIterAfterNext(scenario.build().listIterator(), 1), Result.NoException));
 				printTest(scenarioName + "_testListIterNextAdd", testListIterAdd(listIterAfterNext(scenario.build().listIterator(), 1), ELEMENT_X, Result.NoException));			
 				printTest(scenarioName + "_testListIterNextSet", testListIterSet(listIterAfterNext(scenario.build().listIterator(), 1), ELEMENT_X, Result.NoException));
 				printTest(scenarioName + "_testListIterNextRemoveRemove", testIterRemove(listIterAfterRemove(listIterAfterNext(scenario.build().listIterator(), 1)), Result.IllegalState));
+				//
 				printTest(scenarioName + "_testListIterNextPreviousRemove", testIterRemove(listIterAfterPrevious(listIterAfterNext(scenario.build().listIterator(), 1), 1), Result.NoException));
 				printTest(scenarioName + "_testListIterNextPreviousRemoveRemove", testIterRemove(listIterAfterRemove(listIterAfterPrevious(listIterAfterNext(scenario.build().listIterator(), 1), 1)), Result.IllegalState));
 				printTest(scenarioName + "_testListIterNextPreviousAdd", testListIterAdd(listIterAfterPrevious(listIterAfterNext(scenario.build().listIterator(), 1), 1), ELEMENT_X, Result.NoException));			
@@ -805,6 +840,19 @@ public class ListTester {
 			printTest(scenarioName + "_iterNextRemoveNext_testIterHasNext", testIterHasNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), Result.False));
 			printTest(scenarioName + "_iterNextRemoveNext_testIterNext", testIterNext(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), null, Result.NoSuchElement));
 			printTest(scenarioName + "_iterNextRemoveNext_testIterRemove", testIterRemove(iterAfterNextRemove(iterAfterRemove(iterAfterNext(scenario.build(), 1))), Result.NoException));
+
+			/*
+			 * boundaries
+			 * 
+			 * one call to next
+			 * two calls to next
+			 * one next one previous
+			 * nextnextprevious
+			 * 
+			 * test calls at different indexes 
+			 * 
+			 * 
+			 */
 
 			// ListIterator
 			if (SUPPORTS_LIST_ITERATOR) {

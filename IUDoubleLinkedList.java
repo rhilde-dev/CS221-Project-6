@@ -433,8 +433,6 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             iterModCount++;
             modCount++;
             nextIndex++;
-
-
         }
         
     }
