@@ -404,46 +404,35 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         @Override
         public void add(T e) { //TODO: check this before moving on -----
             //add before the iterator, make it the iterator's previous node
+            //make an explicit case for adding to the middle, left, and right
             if (iterModCount != modCount){ //is the iterator still valid
                 throw new ConcurrentModificationException();
             }
 
             Node<T> newNode = new Node<T>(e);
-            if (lastReturnedNode == null){ // if empty
-                head = newNode;
+            if (isEmpty()){ // if empty
+                head = tail = newNode;
             } else {
-                if (lastReturnedNode == head) {
+                if (nextNode == head) { //adding to front
                     newNode.setNextNode(head);
                     newNode.getNextNode().setPreviousNode(newNode);
                     head = newNode;
-                } else {
-                    newNode.setNextNode(lastReturnedNode.getNextNode());
-                    lastReturnedNode.getNextNode().setPreviousNode(newNode);
-                }
-                if (lastReturnedNode == tail) {
+                } else if (nextNode == null) { //adding to rear
                     newNode.setPreviousNode(tail);
                     newNode.getPreviousNode().setNextNode(newNode);
                     tail = newNode;
-                } else {
-                    newNode.setPreviousNode(lastReturnedNode);
-                    lastReturnedNode.setNextNode(newNode);
-                }
-                if (nextNode == lastReturnedNode){ //last move was previous
-                    nextNode = nextNode.getNextNode();
-                } else { //last move was next
-                    nextIndex++;
+                } else { //adding to middle
+                    newNode.setNextNode(nextNode);
+                    newNode.setPreviousNode(nextNode.getPreviousNode());
+                    nextNode.setPreviousNode(newNode);
+                    newNode.getPreviousNode().setNextNode(newNode);
                 }
             }
 
-            // newNode.setNextNode(lastReturnedNode.getNextNode());
-            // lastReturnedNode.getNextNode().setPreviousNode(newNode);
-            // newNode.setPreviousNode(lastReturnedNode);
-            // lastReturnedNode.setNextNode(newNode);
-
-            // lastReturnedNode = null;
             size++;
             iterModCount++;
             modCount++;
+            nextIndex++;
 
 
         }
