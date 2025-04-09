@@ -309,6 +309,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             if (iterModCount != modCount){
                 throw new ConcurrentModificationException();
             }
+            // System.out.println("The current method is hasNext"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextNode != null;
         }
 
@@ -321,6 +322,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             lastReturnedNode = nextNode;
             nextNode = nextNode.getNextNode();
             nextIndex++;
+            // System.out.println("The current method is next"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return retVal;
         }
 
@@ -330,6 +332,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
                 throw new ConcurrentModificationException();
             }
             // return nextNode.getPreviousNode() != null; //nextIndex > 0
+            // System.out.println("The current method is hasPrevious  "+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextNode != head;
         }
 
@@ -345,17 +348,27 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             }
             lastReturnedNode = nextNode;
             nextIndex--;
+            // System.out.println("The current method is previous"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextNode.getElement();
 
         }
 
         @Override
         public int nextIndex() {
+            if (iterModCount != modCount){
+                throw new ConcurrentModificationException();
+            }
+            // System.out.println("The current method is nextIndex"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextIndex;
+            
         }
 
         @Override
         public int previousIndex() {
+            if (iterModCount != modCount){
+                throw new ConcurrentModificationException();
+            }
+            // System.out.println("The current method is previousIndex"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextIndex - 1;
         }
 
@@ -388,6 +401,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             size--;
             modCount++;
             iterModCount++;
+            // System.out.println("The current method is remove"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
 
         }
 
@@ -402,6 +416,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             lastReturnedNode.setElement(e);
             iterModCount++;
             modCount++;
+            // System.out.println("The current method is set"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
         }
 
         @Override
@@ -433,9 +448,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             }
 
             size++;
-            iterModCount++;
             modCount++;
+            iterModCount++;
             nextIndex++;
+            // System.out.println("The current method is ADD"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
         }
         
     }
