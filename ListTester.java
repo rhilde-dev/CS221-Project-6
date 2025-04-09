@@ -165,24 +165,29 @@ public class ListTester {
 
 		//empty to 1-element list
 		testSingleElementList(emptyList_addToFrontA_A, "emptyList_addToFrontA_A", LIST_A, STRING_A);
+		testSingleElementList(emptyList_iteratorAddA_A, "emptyList_iteratorAddA_A", LIST_A, STRING_A);
 
 		//1-element to empty list
 		testEmptyList(A_removeFirst_emptyList, "A_removeFirst_emptyList"); 
 		testEmptyList(A_removeLast_emptyList, "A_removeLast_emptyList"); 
 		testEmptyList(A_iterRemoveAfterNextA_emptyList, "A_iterRemoveAfterNextA_emptyList");
+		testEmptyList(A_iterRemoveAfterPrevA_emptyList, "A_iterRemoveAfterPrevA_emptyList");
 
 		//1-element to 2-element
 		testTwoElementList(A_addToFrontB_BA, "A_addToFrontB_BA", LIST_BA, STRING_BA);
 		testTwoElementList(A_add_AB, "A_add_AB", LIST_AB, STRING_AB);
+		testTwoElementList(A_iteratorAddB_BA, "A_iteratorAddB_BA", LIST_BA, STRING_AB);
 		
 		//1-element to changed 1-element via set()
 		testSingleElementList(A_set_B, "A_set_B", LIST_B, STRING_B); 
+		testSingleElementList(A_iterSetB_B, "A_iterSetB_B", LIST_B, STRING_B);
 		
 		//2-element to 1-element
 		testSingleElementList(AB_removeA_B, "AB_removeA_B", LIST_B, STRING_B);
 		testSingleElementList(AB_removeB_A, "AB_removeB_A", LIST_A, STRING_A);
 		testSingleElementList(AB_remove1_A, "AB_remove1_A", LIST_A, STRING_A);
 		testSingleElementList(AB_iterRemoveAfterNextA_B, "AB_iterRemoveAfterNextA_B", LIST_B, STRING_B);
+		testSingleElementList(AB_iterRemoveAfterPrevB_A, "AB_iterRemoveAfterPrevB_A", LIST_A, STRING_A);
 
 		//2-element to 3-element
 		testThreeElementList(AB_addToFrontC_CAB, "AB_addToFrontC_CAB", LIST_CAB, STRING_CAB);
@@ -558,7 +563,75 @@ public class ListTester {
 81) [A,B,C] -> iterator set(D) after previous() returns B -> [A,D,C]
 82) [A,B,C] -> iterator set(D) after previous() returns C -> [A,B,D]
 	 * 
+	 * 
+56) [A] -> iterator remove() after previous() returns A -> [] 
+58) [A,B] -> iterator remove() after previous() returns B -> [A]
+62) [] -> iterator add(A) -> [A]
+63) [A] -> iterator add(B) with new iterator -> [B,A]
+71) [A] -> iterator set(B) after next() returns A -> [B] --
+
 	 */
+
+	
+	/** Scenario: [A] -> iterRemoveAfterPrevA -> [] 
+	 * @return [] after iterRemoveAfterPrevA
+	 */
+	private IndexedUnsortedList<Integer> A_iterRemoveAfterPrevA_emptyList() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		ListIterator<Integer> lit = list.listIterator();
+		lit.next();
+		lit.previous();
+		lit.remove();
+		return list;
+	}
+	private Scenario<Integer> A_iterRemoveAfterPrevA_emptyList = () -> A_iterRemoveAfterPrevA_emptyList();
+
+	/** Scenario: [A,B] -> iterRemoveAfterPrevB -> [A] 
+	 * @return [A] after iterRemoveAfterPrevB
+	 */
+	private IndexedUnsortedList<Integer> AB_iterRemoveAfterPrevB_A() {
+		IndexedUnsortedList<Integer> list = A_add_AB(); 
+		ListIterator<Integer> lit = list.listIterator(2);
+		lit.previous();
+		lit.remove();
+		return list;
+	}
+	private Scenario<Integer> AB_iterRemoveAfterPrevB_A = () -> AB_iterRemoveAfterPrevB_A();
+
+	/** Scenario: [] -> iterAddA -> [A]
+	 * @return [A] after iterAddA
+	 */
+	private IndexedUnsortedList<Integer> emptyList_iteratorAddA_A() {
+		IndexedUnsortedList<Integer> list = newList(); 
+		ListIterator<Integer> lit = list.listIterator();
+		lit.add(ELEMENT_A);
+		return list;
+	}
+	private Scenario<Integer> emptyList_iteratorAddA_A = () -> emptyList_iteratorAddA_A();
+
+	/** Scenario: [A] -> iteratorAddB -> [B,A] 
+	 * @return [B,A] after iteratorAddB
+	 */
+	private IndexedUnsortedList<Integer> A_iteratorAddB_BA() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		ListIterator<Integer> lit = list.listIterator(1);
+		lit.previous();
+		lit.add(ELEMENT_B);
+		return list;
+	}
+	private Scenario<Integer> A_iteratorAddB_BA = () -> A_iteratorAddB_BA();
+
+	/** Scenario: [A] -> iteratorSetB returns A -> [B] 
+	 * @return [B] after iteratorSetB
+	 */
+	private IndexedUnsortedList<Integer> A_iterSetB_B() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		ListIterator<Integer> lit = list.listIterator();
+		lit.next();
+		lit.set(ELEMENT_B);
+		return list;
+	}
+	private Scenario<Integer> A_iterSetB_B = () -> A_iterSetB_B();
 
 	//======================= DLL ===========================
 
