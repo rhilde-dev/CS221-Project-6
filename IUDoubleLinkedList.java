@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Double-linked-node-based implementation of IndexedUnsortedList
+ * 
  * @author rhilde-dev
  */
 public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
@@ -13,7 +14,9 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     private int size;
     private int modCount;
 
-    /** Initialize brand new empty list. */
+    /**
+     * Initializes a brand new empty Double Linked List.
+     */
     public IUDoubleLinkedList() {
         head = tail = null;
         size = 0;
@@ -21,7 +24,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     }
 
     @Override
-    public void addToFront(T element) { //TODO: check this ------
+    public void addToFront(T element) {
         Node<T> newNode = new Node<T>(element);
         if (size == 0) {
             head = tail = newNode;
@@ -37,7 +40,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     @Override
     public void addToRear(T element) {
         Node<T> newNode = new Node<T>(element);
-        if (size == 0){ //isEmpty or tail == null
+        if (size == 0) {
             head = tail = newNode;
         } else {
             tail.setNextNode(newNode);
@@ -57,25 +60,24 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     @Override
     public void addAfter(T element, T target) {
         Node<T> targetNode = head;
-        while(targetNode != null && !targetNode.getElement().equals(target)) {
+        while (targetNode != null && !targetNode.getElement().equals(target)) {
             targetNode = targetNode.getNextNode();
         }
-        if(targetNode == null){
+        if (targetNode == null) {
             throw new NoSuchElementException();
         }
         Node<T> newNode = new Node<T>(element);
         newNode.setNextNode(targetNode.getNextNode());
         newNode.setPreviousNode(targetNode);
         targetNode.setNextNode(newNode);
-        if(targetNode == tail){
+        if (targetNode == tail) {
             tail = newNode;
         } else {
             targetNode.getNextNode().setPreviousNode(newNode);
         }
-        
+
         size++;
         modCount++;
-
 
     }
 
@@ -87,7 +89,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T removeFirst() {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new NoSuchElementException();
         }
         ListIterator<T> lit = listIterator();
@@ -98,12 +100,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T removeLast() {
-        if(isEmpty()){
+        if (isEmpty()) {
             throw new NoSuchElementException();
         }
         T retVal = tail.getElement();
         tail = tail.getPreviousNode();
-        if (size == 1){ //tail == null
+        if (size == 1) {
             head = null;
         } else {
             tail.setNextNode(null);
@@ -115,7 +117,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     }
 
     @Override
-    public T remove(T element) { //TODO:  check this -----
+    public T remove(T element) {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
@@ -152,12 +154,11 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         modCount++;
 
         return current.getElement();
-        // throw new UnsupportedOperationException("unimplemented method");
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size){ // valid remove index range != list iterator's range
+        if (index < 0 || index >= size) { // valid remove index range != list iterator's range
             throw new IndexOutOfBoundsException();
         }
         ListIterator<T> lit = listIterator(index);
@@ -239,18 +240,18 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder str = new StringBuilder();
-		str.append("[");
-		for(T element : this){
-			str.append(element.toString());
-			str.append(",");
-		}
-		if (size() > 0){
-			str.delete(str.length() - 1, str.length());
-		}
-		str.append("]");
-		return str.toString();
+        str.append("[");
+        for (T element : this) {
+            str.append(element.toString());
+            str.append(",");
+        }
+        if (size() > 0) {
+            str.delete(str.length() - 1, str.length());
+        }
+        str.append("]");
+        return str.toString();
     }
 
     @Override
@@ -267,19 +268,23 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     public ListIterator<T> listIterator(int startingIndex) {
         return new IUDLLIterator(startingIndex);
     }
-    
-    //don't duplicate code for iterator and list iterator
 
-    /** ListIterator (and basic Iterator) for IUDoubleLinkedList */
+    /**
+     * ListIterator (and basic Iterator) for IUDoubleLinkedList.
+     * This class will iterate through a Doubly Linked List with
+     * efficiency
+     */
     private class IUDLLIterator implements ListIterator<T> {
-        
+
         private Node<T> nextNode;
         private int nextIndex;
         private int iterModCount;
         private Node<T> lastReturnedNode;
 
-        /** Initialize ListIterator before first element */
-        public IUDLLIterator(){
+        /**
+         * Initialize ListIterator before first element
+         */
+        public IUDLLIterator() {
             nextNode = head;
             nextIndex = 0;
             iterModCount = modCount;
@@ -287,15 +292,17 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         }
 
-        /** Intitialize ListIterator before startingIndex
-         * @param startingIndex index of elementthat would be next
+        /**
+         * Intitialize ListIterator before startingIndex
+         * 
+         * @param startingIndex index of element that would be next
          */
-        public IUDLLIterator(int startingIndex){
-            if (startingIndex < 0 || startingIndex > size){
+        public IUDLLIterator(int startingIndex) {
+            if (startingIndex < 0 || startingIndex > size) {
                 throw new IndexOutOfBoundsException();
             }
             nextNode = head;
-            for (int i = 0; i < startingIndex; i++){ //it's fine in the first half, but you should figure out how to start from the back if it's in the second half
+            for (int i = 0; i < startingIndex; i++) {
                 nextNode = nextNode.getNextNode();
             }
             nextIndex = startingIndex;
@@ -306,79 +313,71 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public boolean hasNext() {
-            if (iterModCount != modCount){
+            if (iterModCount != modCount) {
                 throw new ConcurrentModificationException();
             }
-            // System.out.println("The current method is hasNext"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextNode != null;
         }
 
         @Override
         public T next() {
-            if (!hasNext()){
+            if (!hasNext()) {
                 throw new NoSuchElementException();
             }
             T retVal = nextNode.getElement();
             lastReturnedNode = nextNode;
             nextNode = nextNode.getNextNode();
             nextIndex++;
-            // System.out.println("The current method is next"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return retVal;
         }
 
         @Override
         public boolean hasPrevious() {
-            if (iterModCount != modCount){
+            if (iterModCount != modCount) {
                 throw new ConcurrentModificationException();
             }
-            // return nextNode.getPreviousNode() != null; //nextIndex > 0
-            // System.out.println("The current method is hasPrevious  "+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextNode != head;
         }
 
         @Override
         public T previous() {
-            if (!hasPrevious()){
+            if (!hasPrevious()) {
                 throw new NoSuchElementException();
             }
-            if(nextNode != null){
+            if (nextNode != null) {
                 nextNode = nextNode.getPreviousNode();
             } else {
                 nextNode = tail;
             }
             lastReturnedNode = nextNode;
             nextIndex--;
-            // System.out.println("The current method is previous"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextNode.getElement();
 
         }
 
         @Override
         public int nextIndex() {
-            if (iterModCount != modCount){
+            if (iterModCount != modCount) {
                 throw new ConcurrentModificationException();
             }
-            // System.out.println("The current method is nextIndex"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextIndex;
-            
+
         }
 
         @Override
         public int previousIndex() {
-            if (iterModCount != modCount){
+            if (iterModCount != modCount) {
                 throw new ConcurrentModificationException();
             }
-            // System.out.println("The current method is previousIndex"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
             return nextIndex - 1;
         }
 
         @Override
         public void remove() {
-            //enum, pair of booleans, check for last removed values
-            if (iterModCount != modCount){ //is the iterator still valid
+            if (iterModCount != modCount) { // is the iterator still valid
                 throw new ConcurrentModificationException();
             }
-            if (lastReturnedNode == null){ //am I allowed to remove
+            if (lastReturnedNode == null) { // am I allowed to remove
                 throw new IllegalStateException();
             }
             if (lastReturnedNode == head) {
@@ -391,9 +390,9 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             } else {
                 lastReturnedNode.getNextNode().setPreviousNode(lastReturnedNode.getPreviousNode());
             }
-            if (nextNode == lastReturnedNode){ //last move was previous
+            if (nextNode == lastReturnedNode) { // last move was previous
                 nextNode = nextNode.getNextNode();
-            } else { //last move was next
+            } else { // last move was next
                 nextIndex--;
             }
 
@@ -401,45 +400,40 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             size--;
             modCount++;
             iterModCount++;
-            // System.out.println("The current method is remove"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
 
         }
 
         @Override
-        public void set(T e) { //TODO: check this -----
-            if (iterModCount != modCount){ //is the iterator still valid
+        public void set(T e) {
+            if (iterModCount != modCount) { // is the iterator still valid
                 throw new ConcurrentModificationException();
             }
-            if (lastReturnedNode == null){
+            if (lastReturnedNode == null) {
                 throw new IllegalStateException();
             }
             lastReturnedNode.setElement(e);
             iterModCount++;
             modCount++;
-            // System.out.println("The current method is set"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
         }
 
         @Override
-        public void add(T e) { //TODO: check this before moving on -----
-            //add before the iterator, make it the iterator's previous node
-            //make an explicit case for adding to the middle, left, and right
-            if (iterModCount != modCount){ //is the iterator still valid
+        public void add(T e) {
+            if (iterModCount != modCount) { // is the iterator still valid
                 throw new ConcurrentModificationException();
             }
-
             Node<T> newNode = new Node<T>(e);
-            if (isEmpty()){ // if empty
+            if (isEmpty()) { // if empty
                 head = tail = newNode;
             } else {
-                if (nextNode == head) { //adding to front
+                if (nextNode == head) { // adding to front
                     newNode.setNextNode(head);
                     newNode.getNextNode().setPreviousNode(newNode);
                     head = newNode;
-                } else if (nextNode == null) { //adding to rear
+                } else if (nextNode == null) { // adding to rear
                     newNode.setPreviousNode(tail);
                     newNode.getPreviousNode().setNextNode(newNode);
                     tail = newNode;
-                } else { //adding to middle
+                } else { // adding to middle
                     newNode.setNextNode(nextNode);
                     newNode.setPreviousNode(nextNode.getPreviousNode());
                     nextNode.setPreviousNode(newNode);
@@ -451,8 +445,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             modCount++;
             iterModCount++;
             nextIndex++;
-            // System.out.println("The current method is ADD"+", modCount is" + modCount + " and iterModCount is" + iterModCount);
         }
-        
+
     }
 }
